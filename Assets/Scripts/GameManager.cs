@@ -1,5 +1,6 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using TMPro;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -8,9 +9,9 @@ public class GameManager : MonoBehaviour
     public int score = 0;
     public int level = 1;
 
-    public Text scoreText;
-    public Text levelText;
-    public Text comboText;
+    public TMP_Text scoreText;
+    public TMP_Text levelText;
+    public TMP_Text comboText;
 
     private int currentCombo = 0;
 
@@ -52,11 +53,11 @@ public class GameManager : MonoBehaviour
         if (scoreText != null) scoreText.text = "Puan: " + score;
         if (levelText != null) levelText.text = "Seviye: " + level;
         if (comboText != null)
-        {
-            if (currentCombo > 1)
-                comboText.text = "Combo x" + currentCombo;
-            else
-                comboText.text = "";
-        }
+            comboText.text = currentCombo > 1 ? "Combo x" + currentCombo : "";
+    }
+
+    public void ReloadScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

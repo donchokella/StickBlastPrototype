@@ -27,6 +27,16 @@ Day 2
 
 9.30		I reviewed my most recent work and realized that I made some serious mistakes by making poor decisions. Relying on cells turned out to be a very bad choice. I could continue with this approach, but it would significantly complicate the process, or I could rebuild the system from scratch. Fortunately, I believe that some of my solutions will still work for the alternative option. To avoid repeating yesterday's mistakes, I'll take some time to carefully consider how to proceed before moving forward.
 
+10.00		Sistemi degistirme karari aldim. Cunku eger bu sekilde devam edersem ileride daha buyuk zorluklar cikacak. 
+		
+18.00		Artik Sistemimizde hem nodelar, hem barlar hem de celler mevcut fakat piecelerin snap mekanizmasi duzgun calismiyor. Yatay pieceler  de dikey piceler de onizleme de dikey olarak gozukmekte. PRefableri guncelleyerek bu sorun cozuldu. Suanda sistemi sadece tek bir stickten olusan "I" sekilli piece icin kurdum. Muhtemelen ileride bu bana sorun cikaracak. Fakat ne yapmam gerektigini anlamak icin basit bir yoldan ilerlemek bana daha mantikli geldi.
+
+21.15		Bu noktada I sekilli parcalari hucre kenarlarina tam anlamiyla oturtabilmeye basladim. Onizlemeleri de dogru calisiyor fakat hucrelerin boyama mekanizmasi biraz bozuk. onun uzerine yogunlasmaliyim. Bar ve node sistemine gecmem bu noktada cok faydali oldu. 
+
+22.00		Suanda Hucreleri boyayabiliyorum ve eger selection area dan herhangi bir parca yerlestiremiyorsam game over debug i aliyorum. astir ve sutunlardaki hucreler doldugunda boyamalarini kapattim. barlar yok edilmedi. bunu cozmem lazim. ayrica simdilik bir reload tusu ekledim kontrollerimi gerceklestirirken kolaylik saglamasi Adina
+
+		
+
 
 
 

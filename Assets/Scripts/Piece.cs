@@ -1,13 +1,19 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public Vector3 originalPosition;
     private bool isDragging = false;
-
     public float snapDistance = 0.5f;
     private GameObject previewPiece;
+    public Vector3 dragOffset = new Vector3(0.5f, 0.5f, 0f);
+
+    public enum PieceCategory { Default, HorizontalBar, VerticalBar }
+    public PieceCategory pieceCategory = PieceCategory.Default;
+
+    public float candidateTolerance = 0.2f;
 
     void Start()
     {
@@ -18,21 +24,19 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     {
         isDragging = true;
         originalPosition = transform.position;
-        Debug.Log("OnBeginDrag tetiklendi");
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(eventData.position);
         worldPos.z = 0;
-        transform.position = worldPos; // Gerektiginde offset eklemek icin
+        transform.position = worldPos + dragOffset;
 
-        Vector3 snapPosition = GridManager.Instance.GetSnapPosition(transform.position);
-
-        if (Vector3.Distance(transform.position, snapPosition) <= snapDistance &&
-            GridManager.Instance.CanPlacePiece(this, snapPosition))
+        Vector3? commonSnap = GetCommonSnapPosition();
+        if (commonSnap.HasValue && Vector3.Distance(transform.position, commonSnap.Value) <= snapDistance &&
+            GridManager.Instance.CanPlacePiece(this, commonSnap.Value))
         {
-            ShowPreview(snapPosition);
+            ShowPreview(commonSnap.Value);
         }
         else
         {
@@ -43,12 +47,12 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     public void OnEndDrag(PointerEventData eventData)
     {
         isDragging = false;
-        Vector3 snapPosition = GridManager.Instance.GetSnapPosition(transform.position);
-        if (Vector3.Distance(transform.position, snapPosition) <= snapDistance &&
-            GridManager.Instance.CanPlacePiece(this, snapPosition))
+        Vector3? commonSnap = GetCommonSnapPosition();
+        if (commonSnap.HasValue && Vector3.Distance(transform.position, commonSnap.Value) <= snapDistance &&
+            GridManager.Instance.TryPlacePieceAtPosition(commonSnap.Value, this))
         {
-            transform.position = snapPosition;
-            PlacePiece(snapPosition);
+            transform.position = commonSnap.Value;
+            PieceSelectionManager.Instance.RemovePieceFromSelection(gameObject);
         }
         else
         {
@@ -56,6 +60,46 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
         }
         HidePreview();
     }
+
+    Vector3? GetCommonSnapPosition()
+    {
+        Vector3? firstCandidate = null;
+        foreach (Transform child in transform)
+        {
+            Stick stick = child.GetComponent<Stick>();
+            if (stick == null)
+            {
+                Debug.LogWarning("Stick component missing on child. Adding default Stick component.");
+                stick = child.gameObject.AddComponent<Stick>();
+                stick.isHorizontal = true;
+            }
+            Vector3 candidate = stick.GetBarSnapPosition() - child.localPosition;
+            if (!firstCandidate.HasValue)
+            {
+                firstCandidate = candidate;
+            }
+            else
+            {
+                if (Vector3.Distance(firstCandidate.Value, candidate) > candidateTolerance)
+                    return null;
+            }
+        }
+        return firstCandidate;
+    }
+
+    public bool IsPlaceable()
+    {
+        List<Vector3> candidates = new List<Vector3>();
+        candidates.AddRange(GridManager.Instance.horizontalBarPositions);
+        candidates.AddRange(GridManager.Instance.verticalBarPositions);
+        foreach (Vector3 candidate in candidates)
+        {
+            if (GridManager.Instance.CanPlacePiece(this, candidate))
+                return true;
+        }
+        return false;
+    }
+
 
     void ShowPreview(Vector3 pos)
     {
@@ -68,7 +112,6 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
                 c.a = 0.5f;
                 sr.color = c;
             }
-            // Önizlemenin sürükleme işlemini devre dışı bırak
             Destroy(previewPiece.GetComponent<Piece>());
         }
         else
@@ -80,13 +123,7 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     void HidePreview()
     {
         if (previewPiece != null)
-        {
             Destroy(previewPiece);
-        }
     }
 
-    void PlacePiece(Vector3 pos)
-    {
-        GridManager.Instance.PlacePieceAtPosition(pos, this);
-    }
 }

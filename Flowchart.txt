@@ -1,0 +1,151 @@
+         +----------------------+
+         |      Game Start      |
+         +----------------------+
+                   |
+                   v
+   +-------------------------------------+
+   | GameManager: Generate 3 pieces in    |
+   |       selection area                 |					ok
+   +-------------------------------------+
+                   |
+                   v
+   +-------------------------------------+
+   |   Display pieces for selection       |					ok	
+   +-------------------------------------+
+                   |
+                   v
+         +----------------------+
+         |  Player selects a    |						ok	
+         |      piece           |	
+         +----------------------+
+                   |
+                   v
+   +-------------------------------------+
+   | Piece becomes draggable with offset |					ok			
+   +-------------------------------------+
+                   |
+                   v
+   +-------------------------------------+
+   |      Player drags piece             |					ok	
+   +-------------------------------------+
+                   |
+                   v
+   +---------------------------------------------+
+   | Are all bars of the piece within valid      |			
+   | distance of empty grid bars?                |				ok							
+   +---------------------------------------------+
+             /                   \
+           Yes                   No
+            |                     |
+            v                     v
+   +--------------------------+  +---------------------+
+   | Display faded preview    |  | No visual feedback  |			ok								
+   | at candidate position    |  +---------------------+
+   +--------------------------+            |
+            \                             /
+             \                           /
+              v                         v
+         +----------------------+
+         | Player releases piece|						ok					
+         +----------------------+
+                   |
+                   v
+   +-------------------------------------+
+   | Is placement valid?                 |					ok			
+   | (All bars within threshold?)        |
+   +-------------------------------------+
+             /                   \
+           Yes                   No
+            |                     |
+            v                     v
+   +------------------------+  +--------------------------+
+   | Snap piece to grid     |  | Return piece to original |			ok						
+   | positions              |  | selection position       |			
+   +------------------------+  +--------------------------+
+            |
+            v
+   +-------------------------------------+
+   | Update board state:                 |					ok				
+   |  - Fill nodes & award node points   |	
+   +-------------------------------------+
+            |
+            v
+   +-------------------------------------+
+   | For each cell, check if all 4 side- |					ok						
+   | bars are filled                     |	
+   +-------------------------------------+
+             /            \
+           Yes            No
+            |              |
+            v              v
+   +----------------------+   +-------------------------+			
+   | Fill cell interior   |   | Proceed without cell    |			ok			
+   | & award cell points  |   | fill                    |	
+   +----------------------+   +-------------------------+
+            |
+            v
+   +-------------------------------------+
+   | Update combo multiplier & bonus     |				 	1 Combo system is not working properly			
+   | (Visual "Combo xN")                  |
+   +-------------------------------------+
+            |
+            v
+   +-------------------------------------+
+   | Check grid for complete row/column  |					ok	
+   | of colored cells                    |										
+   +-------------------------------------+
+             /            \
+           Yes            No
+            |              |
+            v              v
+   +-------------------------+  +-----------------+
+   | Trigger blast: Clear    |  | No blast        |			
+   | row/column & award      |  +-----------------+				2 The last added piece is still visual
+   | blast points            |
+   +-------------------------+
+            |
+            v
+   +-------------------------------------+
+   | Update total score                  |					ok				
+   +-------------------------------------+
+            |
+            v
+   +-------------------------------------+
+   | Score >= Level threshold?           |					ok	
+   +-------------------------------------+
+             /            \
+           Yes            No
+            |              |
+            v              v
+   +-----------------------+  +-------------------------+
+   | Clear grid & proceed  |  | Continue current level  |			3 Need a level change screen
+   | to new level          |  +-------------------------+
+   +-----------------------+
+            |
+            v
+   +-------------------------------------+
+   | Notify GameManager: Piece processed |					ok	
+   +-------------------------------------+
+            |
+            v
+   +-------------------------------------+
+   | Are all pieces processed?           |					ok					
+   +-------------------------------------+
+             /            \
+           Yes            No
+            |              |
+            v              v
+   +-----------------------+
+   | Check: Is any piece   |			
+   | placeable on grid?    |							ok						
+   +-----------------------+
+             /            \
+         Yes                No
+            |                |
+            v                v
+   +-----------------------+  +-----------------+
+   | Generate new 3 pieces |  |   Game Over     |				4 Need a GameOver screen
+   +-----------------------+  +-----------------+							
+            |
+            v
+     [Back to piece selection]							ok	

@@ -52,9 +52,13 @@ Day 4
 
 10.00 		Stick.cs ve Piece.cs scriptlerinin sorumluluklarini duzenlemeye basladim.
 
-12.00		Her bar eklendiginde 5 puan, her hucre doldugunda 15 puan, her blast gerceklestiginde 100 puan alinmakta. belirli bir limiti gecince sevie atlanmakta ve yeni seviyenin limiti %20 artarak guncellenmekte. Gakat barlar yine burda gorsel olarak dolu kalmakta. Bunu cozmeliyim
+12.00		Her bar eklendiginde 5 puan, her hucre doldugunda 15 puan, her blast gerceklestiginde 100 puan alinmakta. belirli bir limiti gecince seviye atlanmakta ve yeni seviyenin limiti %20 artarak guncellenmekte. Fakat barlar yine burda gorsel olarak dolu kalmakta. Bunu cozmeliyim
 
-12.30				
+15.30		Piece ve stick sorumluluklari duzenlendi
+
+17.00		Cok stickli piecler artik oyuna dahil edilebildi, fakat bazi buglar var.
+
+
 
 
 

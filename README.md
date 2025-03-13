@@ -27,16 +27,26 @@ Day 2
 
 9.30		I reviewed my most recent work and realized that I made some serious mistakes by making poor decisions. Relying on cells turned out to be a very bad choice. I could continue with this approach, but it would significantly complicate the process, or I could rebuild the system from scratch. Fortunately, I believe that some of my solutions will still work for the alternative option. To avoid repeating yesterday's mistakes, I'll take some time to carefully consider how to proceed before moving forward.
 
-10.00		Sistemi degistirme karari aldim. Cunku eger bu sekilde devam edersem ileride daha buyuk zorluklar cikacak. 
+10.00		I decided to change the system because if I continued with the current approach, bigger challenges would arise later. 
 		
-18.00		Artik Sistemimizde hem nodelar, hem barlar hem de celler mevcut fakat piecelerin snap mekanizmasi duzgun calismiyor. Yatay pieceler  de dikey piceler de onizleme de dikey olarak gozukmekte. PRefableri guncelleyerek bu sorun cozuldu. Suanda sistemi sadece tek bir stickten olusan "I" sekilli piece icin kurdum. Muhtemelen ileride bu bana sorun cikaracak. Fakat ne yapmam gerektigini anlamak icin basit bir yoldan ilerlemek bana daha mantikli geldi.
+18.00		Now our system includes nodes, bars, and cells; however, the piece snap mechanism isn’t working correctly. Both horizontal and vertical pieces appear as vertical in the preview. I updated the prefabs to resolve this issue. For now, I built the system only for the "I" shaped piece, which consists of a single stick. It will likely cause problems later, but I thought it was more sensible to start with a simple approach to understand what needs to be done.
 
-21.15		Bu noktada I sekilli parcalari hucre kenarlarina tam anlamiyla oturtabilmeye basladim. Onizlemeleri de dogru calisiyor fakat hucrelerin boyama mekanizmasi biraz bozuk. onun uzerine yogunlasmaliyim. Bar ve node sistemine gecmem bu noktada cok faydali oldu. 
+21.15		At this point, I started to properly align the "I" shaped pieces to the cell borders. The previews work correctly, but the cell coloring mechanism is a bit off. I need to focus on that. Moving to a bar and node system proved very beneficial.
 
-22.00		Suanda Hucreleri boyayabiliyorum ve eger selection area dan herhangi bir parca yerlestiremiyorsam game over debug i aliyorum. astir ve sutunlardaki hucreler doldugunda boyamalarini kapattim. barlar yok edilmedi. bunu cozmem lazim. ayrica simdilik bir reload tusu ekledim kontrollerimi gerceklestirirken kolaylik saglamasi Adina
+22.00		Right now, I can color the cells, and if no piece from the selection area can be placed, I get a game over debug message. When rows or columns fill up, I’ve turned off the cell coloring. However, the bars are not being cleared – I need to fix that. I also added a reload button to ease testing.
 
-		
 
+Day 3
+
+10.00		I compared the prototype with the initial flowchart and went through what has been done and what still needs to be done.
+
+11.10		After blast (row/column clearing) occurs, the cells return to their initial state, but the bars are not behaving as expected. I struggled to find the root cause and decided to try a new approach. In this approach, the placed piece becomes a child of the bar where it is attached. During the blast check, the sticks attached to that cell are inspected and, if there are extra child objects, they are removed.
+
+13.00		I expected this method to completely resolve the issue, but now a small problem remains: the last dragged stick remains on the screen. However, the grid seems to recognize that the area is cleared, meaning a new stick can be placed there. The problem seems to be only with the visual feedback. This can probably be solved by fixing the visual aspect.
+
+15.00 		I reviewed the code thoroughly, but I couldn’t find the exact cause. Initially, I suspected an issue with the method execution order (and I still think it might be related). Perhaps the piece is reparented after the bars are cleared? I investigated and tried to fix it, but it turned out not to be the case.
+
+20.00		While debugging, I discovered a logical error in how the Stick and Piece operations were handled. Most of the dragging and dropping operations were implemented in Piece.cs, while Stick.cs was only used to control the orientation of the sticks. This will likely be problematic when adding pieces with multiple sticks in the future. I need to clearly define the scope of Stick.cs and Piece.cs. I believe that the operations related to dragging and releasing the piece should remain in Piece.cs, but it might be more logical for snapping and preview functionalities to be controlled from Stick.cs. This way, managing pieces with multiple sticks will be easier.
 
 
 

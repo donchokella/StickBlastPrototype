@@ -41,6 +41,7 @@ public class PieceSelectionManager : MonoBehaviour
             newPiece.transform.localPosition = new Vector3(i * 5f - 5f, 0, 0);
             currentPieces.Add(newPiece);
         }
+        CheckForGameOver();
     }
 
     public void RemovePieceFromSelection(GameObject piece)

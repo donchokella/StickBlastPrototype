@@ -30,5 +30,6 @@ public class Cell : MonoBehaviour
     public void ResetCell()
     {
         ClearCell();
+        //TODO: Reset any other cell related data
     }
 }

@@ -1284,6 +1284,7 @@ MonoBehaviour:
   nodePrefab: {fileID: 4626762086764336381, guid: 0d55e6979d4850741b88c48cc5f50a4e, type: 3}
   horizontalBarPositions: []
   verticalBarPositions: []
+  placedPieces: []
 --- !u!4 &1992411884
 Transform:
   m_ObjectHideFlags: 0

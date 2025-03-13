@@ -12,7 +12,7 @@ public class GridManager : MonoBehaviour
     public GameObject cellPrefab;
     public GameObject horizontalBarPrefab;
     public GameObject verticalBarPrefab;
-    public GameObject nodePrefab; 
+    public GameObject nodePrefab;
 
     [HideInInspector]
     public Cell[,] cells;
@@ -22,6 +22,8 @@ public class GridManager : MonoBehaviour
 
     public List<Vector3> horizontalBarPositions = new List<Vector3>();
     public List<Vector3> verticalBarPositions = new List<Vector3>();
+
+    public List<GameObject> placedPieces = new List<GameObject>();
 
     void Awake()
     {
@@ -38,6 +40,7 @@ public class GridManager : MonoBehaviour
 
     void CreateGrid()
     {
+        // Very Important*********************************
         cells = new Cell[gridWidth, gridHeight];
         for (int x = 0; x < gridWidth; x++)
         {
@@ -83,6 +86,7 @@ public class GridManager : MonoBehaviour
             }
         }
 
+        // For now, they are only for visual
         if (nodePrefab != null)
         {
             for (int x = 0; x < gridWidth + 1; x++)
@@ -177,6 +181,7 @@ public class GridManager : MonoBehaviour
             }
         }
     }
+
     public void CheckForBlast()
     {
         for (int y = 0; y < gridHeight; y++)
@@ -195,7 +200,22 @@ public class GridManager : MonoBehaviour
                 GameManager.Instance.AddScore(50);
                 for (int x = 0; x < gridWidth; x++)
                 {
+                    if (horizontalBars[x, y].transform.childCount > 1)
+                        Destroy(horizontalBars[x, y].transform.GetChild(1).gameObject);
+                    if (horizontalBars[x, y + 1].transform.childCount > 1)
+                        Destroy(horizontalBars[x, y + 1].transform.GetChild(1).gameObject);
+                    if (verticalBars[x, y].transform.childCount > 1)
+                        Destroy(verticalBars[x, y].transform.GetChild(1).gameObject);
+                    if (verticalBars[x + 1, y].transform.childCount > 1)
+                        Destroy(verticalBars[x + 1, y].transform.GetChild(1).gameObject);
+
+                    horizontalBars[x, y].SetFilled(false);
+                    horizontalBars[x, y + 1].SetFilled(false);
+                    verticalBars[x, y].SetFilled(false);
+                    verticalBars[x + 1, y].SetFilled(false);
                     cells[x, y].ClearCell();
+
+                   
                 }
             }
         }
@@ -213,15 +233,34 @@ public class GridManager : MonoBehaviour
             }
             if (colFilled)
             {
-                GameManager.Instance.AddScore(50);
+                GameManager.Instance.AddScore(50); 
                 for (int y = 0; y < gridHeight; y++)
                 {
+                    
+                    if (horizontalBars[x, y].transform.childCount > 1)
+                        Destroy(horizontalBars[x, y].transform.GetChild(1).gameObject);
+                    if (horizontalBars[x, y + 1].transform.childCount > 1)
+                        Destroy(horizontalBars[x, y + 1].transform.GetChild(1).gameObject);
+                    if (verticalBars[x, y].transform.childCount > 1)
+                        Destroy(verticalBars[x, y].transform.GetChild(1).gameObject);
+                    if (verticalBars[x + 1, y].transform.childCount > 1)
+                        Destroy(verticalBars[x + 1, y].transform.GetChild(1).gameObject);
+                   
+                    horizontalBars[x, y].SetFilled(false);
+                    horizontalBars[x, y + 1].SetFilled(false);
+                    verticalBars[x, y].SetFilled(false);
+                    verticalBars[x + 1, y].SetFilled(false);
                     cells[x, y].ClearCell();
                 }
             }
         }
     }
 
+    public void RegisterPlacedPiece(GameObject piece)
+    {
+        if (!placedPieces.Contains(piece))
+            placedPieces.Add(piece);
+    }
 
     public bool TryPlacePieceAtPosition(Vector3 pos, Piece piece)
     {

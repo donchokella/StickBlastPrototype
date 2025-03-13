@@ -10,10 +10,9 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
     private GameObject previewPiece;
     public Vector3 dragOffset = new Vector3(0.5f, 0.5f, 0f);
 
-    public enum PieceCategory { Default, HorizontalBar, VerticalBar }
-    public PieceCategory pieceCategory = PieceCategory.Default;
-
-    public float candidateTolerance = 0.2f;
+    
+    //public enum PieceCategory { Default, HorizontalBar, VerticalBar }
+    //public PieceCategory pieceCategory = PieceCategory.Default;
 
     void Start()
     {
@@ -52,7 +51,17 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
             GridManager.Instance.TryPlacePieceAtPosition(commonSnap.Value, this))
         {
             transform.position = commonSnap.Value;
+            // İlk önce, parça yerleştirildiği barın child objesi haline getirilir.
+            Transform parentBar = GetParentBarForPiece();
+            if (parentBar != null)
+            {
+                transform.SetParent(parentBar);
+            }
+            // Parça seçim alanından kaldırılır ve yerleştirilen parçalar listesine eklenir.
             PieceSelectionManager.Instance.RemovePieceFromSelection(gameObject);
+            GridManager.Instance.RegisterPlacedPiece(gameObject);
+            // Sonrasında blast kontrolü yapılır.
+            GridManager.Instance.CheckForBlast();
         }
         else
         {
@@ -63,43 +72,47 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
 
     Vector3? GetCommonSnapPosition()
     {
-        Vector3? firstCandidate = null;
         foreach (Transform child in transform)
         {
             Stick stick = child.GetComponent<Stick>();
             if (stick == null)
             {
-                Debug.LogWarning("Stick component missing on child. Adding default Stick component.");
                 stick = child.gameObject.AddComponent<Stick>();
                 stick.isHorizontal = true;
             }
+
             Vector3 candidate = stick.GetBarSnapPosition() - child.localPosition;
-            if (!firstCandidate.HasValue)
-            {
-                firstCandidate = candidate;
-            }
-            else
-            {
-                if (Vector3.Distance(firstCandidate.Value, candidate) > candidateTolerance)
-                    return null;
-            }
+            return candidate;
         }
-        return firstCandidate;
+        return null; // Hiç çubuk yoksa null döner.
     }
 
-    public bool IsPlaceable()
+    Transform GetParentBarForPiece()
     {
-        List<Vector3> candidates = new List<Vector3>();
-        candidates.AddRange(GridManager.Instance.horizontalBarPositions);
-        candidates.AddRange(GridManager.Instance.verticalBarPositions);
-        foreach (Vector3 candidate in candidates)
+        foreach (Transform child in transform)
         {
-            if (GridManager.Instance.CanPlacePiece(this, candidate))
-                return true;
+            Stick stick = child.GetComponent<Stick>();
+            if (stick != null)
+            {
+                Vector3 childWorldPos = transform.position + child.localPosition;
+                if (stick.isHorizontal)
+                {
+                    Vector3 snapPos = GridManager.Instance.GetClosestHorizontalBarPosition(childWorldPos);
+                    int barX = Mathf.RoundToInt(snapPos.x / GridManager.Instance.cellSize);
+                    int barY = Mathf.RoundToInt((snapPos.y + (GridManager.Instance.cellSize / 2)) / GridManager.Instance.cellSize);
+                    return GridManager.Instance.horizontalBars[barX, barY].transform;
+                }
+                else
+                {
+                    Vector3 snapPos = GridManager.Instance.GetClosestVerticalBarPosition(childWorldPos);
+                    int barY = Mathf.RoundToInt(snapPos.y / GridManager.Instance.cellSize);
+                    int barX = Mathf.RoundToInt((snapPos.x + (GridManager.Instance.cellSize / 2)) / GridManager.Instance.cellSize);
+                    return GridManager.Instance.verticalBars[barX, barY].transform;
+                }
+            }
         }
-        return false;
+        return null;
     }
-
 
     void ShowPreview(Vector3 pos)
     {
@@ -126,4 +139,16 @@ public class Piece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHan
             Destroy(previewPiece);
     }
 
+    public bool IsPlaceable()
+    {
+        List<Vector3> candidates = new List<Vector3>();
+        candidates.AddRange(GridManager.Instance.horizontalBarPositions);
+        candidates.AddRange(GridManager.Instance.verticalBarPositions);
+        foreach (Vector3 candidate in candidates)
+        {
+            if (GridManager.Instance.CanPlacePiece(this, candidate))
+                return true;
+        }
+        return false;
+    }
 }

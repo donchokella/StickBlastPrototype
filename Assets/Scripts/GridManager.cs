@@ -115,17 +115,27 @@ public class GridManager : MonoBehaviour
                 cells[x, y].ResetCell();
             }
         }
+
         for (int x = 0; x < gridWidth; x++)
         {
             for (int y = 0; y < gridHeight + 1; y++)
             {
+                if (horizontalBars[x, y].transform.childCount > 1)
+                {
+                    Destroy(horizontalBars[x, y].transform.GetChild(1).gameObject);
+                }
                 horizontalBars[x, y].SetFilled(false);
             }
         }
+
         for (int x = 0; x < gridWidth + 1; x++)
         {
             for (int y = 0; y < gridHeight; y++)
             {
+                if (verticalBars[x, y].transform.childCount > 1)
+                {
+                    Destroy(verticalBars[x, y].transform.GetChild(1).gameObject);
+                }
                 verticalBars[x, y].SetFilled(false);
             }
         }
@@ -176,8 +186,9 @@ public class GridManager : MonoBehaviour
                 if (topBar && bottomBar && leftBar && rightBar && !cells[x, y].isFilled)
                 {
                     cells[x, y].FillCell();
-                    GameManager.Instance.AddScore(10);
+                    GameManager.Instance.AddScore(15);
                 }
+
             }
         }
     }
@@ -197,7 +208,7 @@ public class GridManager : MonoBehaviour
             }
             if (rowFilled)
             {
-                GameManager.Instance.AddScore(50);
+                GameManager.Instance.AddScore(100);
                 for (int x = 0; x < gridWidth; x++)
                 {
                     if (horizontalBars[x, y].transform.childCount > 1)
@@ -233,7 +244,7 @@ public class GridManager : MonoBehaviour
             }
             if (colFilled)
             {
-                GameManager.Instance.AddScore(50); 
+                GameManager.Instance.AddScore(100); 
                 for (int y = 0; y < gridHeight; y++)
                 {
                     
@@ -303,6 +314,7 @@ public class GridManager : MonoBehaviour
         foreach (Bar bar in barsToFill)
         {
             bar.SetFilled(true);
+            GameManager.Instance.AddScore(5);
         }
         CheckAndFillCells();
         CheckForBlast();
@@ -353,4 +365,27 @@ public class GridManager : MonoBehaviour
         int y = Mathf.RoundToInt(position.y / cellSize);
         return new Vector3(x * cellSize, y * cellSize, 0);
     }
+
+    public bool CanPlacePieceForStick(Piece piece, Vector3 candidate, bool isHorizontal)
+    {
+        if (isHorizontal)
+        {
+            int barX = Mathf.RoundToInt(candidate.x / cellSize);
+            int barY = Mathf.RoundToInt((candidate.y + (cellSize / 2)) / cellSize);
+            if (barX < 0 || barX >= gridWidth || barY < 0 || barY >= gridHeight + 1)
+                return false;
+            Bar bar = horizontalBars[barX, barY];
+            return !bar.isFilled;
+        }
+        else
+        {
+            int barX = Mathf.RoundToInt((candidate.x + (cellSize / 2)) / cellSize);
+            int barY = Mathf.RoundToInt(candidate.y / cellSize);
+            if (barX < 0 || barX >= gridWidth + 1 || barY < 0 || barY >= gridHeight)
+                return false;
+            Bar bar = verticalBars[barX, barY];
+            return !bar.isFilled;
+        }
+    }
+
 }

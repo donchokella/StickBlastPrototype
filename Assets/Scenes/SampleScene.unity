@@ -525,6 +525,11 @@ MonoBehaviour:
   piecePrefabs:
   - {fileID: 5075276193305206930, guid: 004d5ffcc750eec4c8dccd14d6dd0e33, type: 3}
   - {fileID: 2350284193877396726, guid: 107de6c345224254784dc43b35a8db9b, type: 3}
+  - {fileID: 7766784792154417475, guid: cebf7dd7e328a52448e4aa9cf9cd37e6, type: 3}
+  - {fileID: 7766784792154417475, guid: 9fe60ae0e3cf3b94a994aeff011aa705, type: 3}
+  - {fileID: 7766784792154417475, guid: 4b40869575f2b14408327ec32541cdeb, type: 3}
+  - {fileID: 7766784792154417475, guid: ef36b8eb0c6a5364484d3b2e62c0b5ff, type: 3}
+  - {fileID: 7766784792154417475, guid: 87c5358746c42684e91fe8fb1678d67d, type: 3}
   selectionArea: {fileID: 942475786}
 --- !u!4 &771957903
 Transform:
@@ -1228,6 +1233,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   score: 0
   level: 1
+  levelScoreLimit: 250
   scoreText: {fileID: 1948720461}
   levelText: {fileID: 1127708688}
   comboText: {fileID: 445849481}

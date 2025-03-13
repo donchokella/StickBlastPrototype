@@ -8,10 +8,9 @@ public class PieceSelectionManager : MonoBehaviour
 
     public event Action OnGameOver;
 
-    [Header("Manuel Oluşturulmuş Parça Prefab'ları (I, L, U)")]
+    [Header("PrefabS (I, L, U)")]
     public GameObject[] piecePrefabs;
 
-    [Header("Seçim Alanı")]
     public Transform selectionArea;
 
     private List<GameObject> currentPieces = new List<GameObject>();

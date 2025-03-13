@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     public int score = 0;
     public int level = 1;
 
+    public int levelScoreLimit = 250;
+
     public TMP_Text scoreText;
     public TMP_Text levelText;
     public TMP_Text comboText;
@@ -33,6 +35,11 @@ public class GameManager : MonoBehaviour
         score += points;
         currentCombo++;
         UpdateUI();
+
+        if (score >= levelScoreLimit)
+        {
+            NextLevel();
+        }
     }
 
     public void ResetCombo()
@@ -41,9 +48,15 @@ public class GameManager : MonoBehaviour
         UpdateUI();
     }
 
+   
     public void NextLevel()
     {
         level++;
+        levelScoreLimit = Mathf.RoundToInt(levelScoreLimit * 1.2f);
+
+        score = 0;
+        ResetCombo();
+
         GridManager.Instance.ResetGrid();
         UpdateUI();
     }
@@ -60,4 +73,5 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+
 }

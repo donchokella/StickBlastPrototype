@@ -46,7 +46,16 @@ Day 3
 
 15.00 		I reviewed the code thoroughly, but I couldn’t find the exact cause. Initially, I suspected an issue with the method execution order (and I still think it might be related). Perhaps the piece is reparented after the bars are cleared? I investigated and tried to fix it, but it turned out not to be the case.
 
-20.00		While debugging, I discovered a logical error in how the Stick and Piece operations were handled. Most of the dragging and dropping operations were implemented in Piece.cs, while Stick.cs was only used to control the orientation of the sticks. This will likely be problematic when adding pieces with multiple sticks in the future. I need to clearly define the scope of Stick.cs and Piece.cs. I believe that the operations related to dragging and releasing the piece should remain in Piece.cs, but it might be more logical for snapping and preview functionalities to be controlled from Stick.cs. This way, managing pieces with multiple sticks will be easier.
+20.00		While debugging, I discovered a logical error in how the Stick and Piece operations were handled. Most of the dragging and dropping operations were implemented in Piece.cs, while Stick.cs was only used to control the orientation of the sticks. This will likely be problematic when adding pieces with multiple sticks in the future. I need to clearly define the scope of	 Stick.cs and Piece.cs. I believe that the operations related to dragging and releasing the piece should remain in Piece.cs, but it might be more logical for snapping and preview functionalities to be controlled from Stick.cs. This way, managing pieces with multiple sticks will be easier.
+
+Day 4
+
+10.00 		Stick.cs ve Piece.cs scriptlerinin sorumluluklarini duzenlemeye basladim.
+
+12.00		Her bar eklendiginde 5 puan, her hucre doldugunda 15 puan, her blast gerceklestiginde 100 puan alinmakta. belirli bir limiti gecince sevie atlanmakta ve yeni seviyenin limiti %20 artarak guncellenmekte. Gakat barlar yine burda gorsel olarak dolu kalmakta. Bunu cozmeliyim
+
+12.30				
+
 
 
 
